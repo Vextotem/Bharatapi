@@ -4,7 +4,7 @@
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RgShows Api 5</title>
+    <title>Watch Movie or TV Series</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/devtools-detector/2.0.17/devtools-detector.js"></script>
     <script src="../../../js/protected_devtoolsdetector.js" preload></script>
     <script src="../../../js/nocheats.js" preload></script>
@@ -49,9 +49,9 @@
             return urlParams.get(name);
         }
 
-        // Function to fetch IMDb ID using TMDB ID
-        async function fetchImdbId(tmdbId) {
-            const url = `https://api.themoviedb.org/3/movie/${tmdbId}/external_ids?api_key=${apiKey}`;
+        // Function to fetch IMDb ID using TMDB ID for movies or TV series
+        async function fetchImdbId(tmdbId, type) {
+            const url = `https://api.themoviedb.org/3/${type}/${tmdbId}/external_ids?api_key=${apiKey}`;
             const response = await fetch(url);
             const data = await response.json();
             return data.imdb_id;
@@ -62,12 +62,13 @@
             const loader = document.getElementById('loader');
             const videoFrame = document.getElementById('videoFrame');
             const tmdbId = getParam('id');
+            const type = getParam('type') || 'movie'; // Default to movie if not specified
             if (tmdbId) {
                 loader.style.display = 'block';
                 try {
-                    const imdbId = await fetchImdbId(tmdbId);
+                    const imdbId = await fetchImdbId(tmdbId, type);
                     if (imdbId) {
-                        const iframeUrl = `https://www.bharatflix.live/watch/movie/${tmdbId}/${imdbId}`;
+                        const iframeUrl = `https://www.bharatflix.live/watch/${type}/${tmdbId}/${imdbId}`;
                         videoFrame.src = iframeUrl;
                         videoFrame.style.display = 'block';
                     } else {
